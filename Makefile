@@ -7,7 +7,7 @@ OBJ_DIR := obj
 SRC_DIR := src
 INC_DIR := include
 LIB_DIR := lib
-PREFIX := py_frame
+PREFIX := $(INSTALL_DIR)
 
 LIB := $(LIB_DIR)/lib$(PROJECT).so
 
