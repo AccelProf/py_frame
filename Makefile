@@ -31,11 +31,28 @@ LINK_LIBS += -lpython$(PYTHON_VERSION)
 INCLUDES += -I$(PYBIND11_DIR)/include
 
 CXX_FLAGS += -std=c++17
+
 ifeq ($(DEBUG), 1)
-	CXX_FLAGS += -g -O0
-else
-	CXX_FLAGS += -O3
+	CXX_FLAGS += -g
 endif
+
+OPT_LVL ?= 3
+ifeq ($(OPT_LVL), 0)
+	CXX_FLAGS += -O0
+else ifeq ($(OPT_LVL), 1)
+	CXX_FLAGS += -O1 -march=native
+else ifeq ($(OPT_LVL), 2)
+	CXX_FLAGS += -O2 -march=native
+else ifeq ($(OPT_LVL), 3)
+	CXX_FLAGS += -O3 -march=native
+else
+    $(error Invalid OPT_LVL=$(OPT_LVL), expected 0,1,2,3)
+endif
+
+ifneq ($(OPT_LVL),0)
+    CXX_FLAGS += -march=native
+endif
+
 
 SRCS := $(notdir $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/*/*.cpp))
 OBJS := $(addprefix $(OBJ_DIR)/, $(patsubst %.cpp, %.o, $(SRCS)))
